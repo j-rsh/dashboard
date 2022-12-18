@@ -1,18 +1,19 @@
 import React from 'react';
+import { Routes, Route} from "react-router-dom";
 import { client } from "./graphql/client";
 import { ApolloProvider } from "@apollo/client";
-import SignupForm from './components/Register';
+import Register from './components/Register';
 import '@shopify/polaris/build/esm/styles.css';
-import {AppProvider} from '@shopify/polaris'
+import Login from './components/Login'; 
 
 const App = () => {
   return (
     <div>
      <ApolloProvider client={client}>
-     <AppProvider>
-      {/* <Test/> */}
-      <SignupForm/>
-      </AppProvider>
+     <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+    </Routes>
      </ApolloProvider>
     
       
