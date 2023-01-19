@@ -20,29 +20,21 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
-
 export const CREATE_JOB_MUTATION = gql`
   mutation CreateJobMutation(
     $title: String!
     $description: String!
     $city: String!
-    $skills: [String]!
   ) {
-    createJob(
-      title: $title
-      description: $description
-      city: $city
-    ) {
+    createJob(title: $title, description: $description, city: $city) {
       job {
         id
         title
         description
         city
-      
       }
       message
       status
     }
   }
 `;
-
