@@ -28,6 +28,8 @@ export default function Login() {
 
         if (data.login.status) {
           localStorage.setItem("token", data.login.token);
+          localStorage.setItem("user", data.data.login.user.email);
+
           navigate("/");
         }
 

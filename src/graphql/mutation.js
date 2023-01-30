@@ -20,21 +20,77 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
-export const CREATE_JOB_MUTATION = gql`
-  mutation CreateJobMutation(
+
+export const CREATE_JOB = gql`
+  mutation CreateJob(
     $title: String!
     $description: String!
     $city: String!
+    $skills: [String]!
   ) {
-    createJob(title: $title, description: $description, city: $city) {
+    createJob(
+      title: $title
+      description: $description
+      city: $city
+      skills: $skills
+    ) {
       job {
-        id
         title
         description
         city
+        skills {
+          title
+          id
+        }
       }
+      status
+      message
+    }
+  }
+`;
+
+export const DeleteJob = gql`
+  mutation DeleteJob($id: Int!) {
+    deleteJob(id: $id) {
       message
       status
     }
   }
 `;
+
+export const UpdateJob = gql`
+  mutation UpdateJob(
+    $id: Int!
+    $title: String!
+    $description: String!
+    $city: String!
+    $skills: [String]!
+  ) {
+    updateJob(
+      id: $id
+      title: $title
+      description: $description
+      city: $city
+      skills: $skills
+    ) {
+      status
+    }
+  }
+`;
+//   mutation CreateJobMutation(
+//     $title: String!
+//     $description: String!
+//     $city: String!
+//   ) {
+//     createJob(title: $title, description: $description, city: $city) {
+//       job {
+//         id
+//         title
+//         description
+//         city
+//       }
+//       message
+//       status
+//     }
+//   }
+// `;

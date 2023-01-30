@@ -10,50 +10,55 @@ import { useState, useCallback, useMemo } from "react";
 import { SKILLS } from "../graphql/query";
 import { useQuery } from "@apollo/client";
 import { useField } from "formik";
+// initialValues
+// {
+//     selectedTags:[],
+//     suggestion:"",
+//     value:""
 
+// }
 export function Skill({ label, name }) {
-  const [selectedTags, setSelectedTags] = useState([]);
-  //   const [value, setValue] = useState("");
+  //   const [selectedTags, setSelectedTags] = useState([]);
+  const [value, setValue] = useState("");
   const [suggestion, setSuggestion] = useState("");
 
   const { data } = useQuery(SKILLS, {
     variables: {
-      title: field.value,
+      title: value,
       limit: 5,
     },
   });
 
-  const [field, meta, helper] = useField(name);
-  //   console.log(field);
-  const { setValue } = helper;
-  console.log(helper.setValue);
+  const [field, helper] = useField(name);
+  const { setValue: setSelectedTags } = helper;
+  console.log(setValue);
 
   const handleActiveOptionChange = useCallback(
     (activeOption) => {
-      const activeOptionIsAction = activeOption === field.value;
+      const activeOptionIsAction = activeOption === value;
 
-      if (!activeOptionIsAction && !selectedTags.includes(activeOption)) {
+      if (!activeOptionIsAction && !field.value.includes(activeOption)) {
         setSuggestion(activeOption);
       } else {
         setSuggestion("");
       }
     },
-    [field.value, selectedTags]
+    [value, field.value]
   );
   const updateSelection = useCallback(
     (selected) => {
-      const nextSelectedTags = new Set([...selectedTags]);
+      const nextSelectedTags = new Set([...field.value]);
 
       if (nextSelectedTags.has(selected)) {
         nextSelectedTags.delete(selected);
       } else {
         nextSelectedTags.add(selected);
       }
-      setSelectedTags([...nextSelectedTags]);
-      helper.setValue("");
+      helper.setValue([...nextSelectedTags]);
+      setValue("");
       setSuggestion("");
     },
-    [selectedTags]
+    [field.value]
   );
 
   const removeTag = useCallback(
@@ -65,15 +70,15 @@ export function Skill({ label, name }) {
 
   const getAllTags = useCallback(() => {
     const savedTags = ["Rustic", "Antique", "Vinyl", "Vintage", "Refurbished"];
-    return [...new Set([...savedTags, ...selectedTags].sort())];
-  }, [selectedTags]);
+    return [...new Set([...savedTags, ...field.value].sort())];
+  }, [field.value]);
 
   const formatOptionText = useCallback(
     (option) => {
-      const trimValue = field.value.trim().toLocaleLowerCase();
+      const trimValue = value.trim().toLocaleLowerCase();
       const matchIndex = option.toLocaleLowerCase().indexOf(trimValue);
 
-      if (!field.value || matchIndex === -1) return option;
+      if (!value || matchIndex === -1) return option;
 
       const start = option.slice(0, matchIndex);
       const highlight = option.slice(matchIndex, matchIndex + trimValue.length);
@@ -89,27 +94,27 @@ export function Skill({ label, name }) {
         </p>
       );
     },
-    [field.value]
+    [value]
   );
 
   const options = useMemo(() => {
     let list;
     const allTags = getAllTags();
-    const filterRegex = new RegExp(field.value, "i");
+    const filterRegex = new RegExp(value, "i");
 
-    if (field.value) {
+    if (value) {
       list = allTags.filter((tag) => tag.match(filterRegex));
     } else {
       list = allTags;
     }
 
     return [...list];
-  }, [field.value, getAllTags]);
+  }, [value, getAllTags]);
 
   const verticalContentMarkup =
-    selectedTags.length > 0 ? (
+    field.value.length > 0 ? (
       <Stack spacing="extraTight" alignment="center">
-        {selectedTags.map((tag) => (
+        {field.value.map((tag) => (
           <Tag key={`option-${tag}`} onRemove={removeTag(tag)}>
             {tag}
           </Tag>
@@ -125,7 +130,7 @@ export function Skill({ label, name }) {
           <Listbox.Option
             key={`${title + id}`}
             value={title}
-            selected={selectedTags.includes(title)}
+            selected={field.value.includes(title)}
             // accessibilityLabel={label}
           >
             {title}
@@ -134,18 +139,16 @@ export function Skill({ label, name }) {
       })
     : null;
 
-  const noResults = field.value && !getAllTags().includes(field.value);
+  const noResults = value && !getAllTags().includes(value);
 
   const actionMarkup = noResults ? (
-    <Listbox.Action
-      value={field.value}
-    >{`Add "${field.value}"`}</Listbox.Action>
+    <Listbox.Action value={value}>{`Add "${value}"`}</Listbox.Action>
   ) : null;
 
   const emptyStateMarkup = optionMarkup ? null : (
     <EmptySearchResult
       title=""
-      description={`No tags found matching "${field.value}"`}
+      description={`No tags found matching "${value}"`}
     />
   );
 
@@ -170,11 +173,11 @@ export function Skill({ label, name }) {
             autoComplete="off"
             label="Search tags"
             labelHidden
-            value={field.value}
+            value={value}
             suggestion={suggestion}
             placeholder="Search tags"
             verticalContent={verticalContentMarkup}
-            onChange={helper.setValue}
+            onChange={setValue}
           />
         }
       >

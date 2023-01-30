@@ -6,11 +6,11 @@ import Register from "./routs/Register/Register";
 import "@shopify/polaris/build/esm/styles.css";
 import Login from "./routs/Login/Login";
 import Dashboard from "./routs/Dashboard/Dashboard";
-import JobLists from "./routs/JobList/JobLists";
 import NewJob from "./routs/NewJob/NewJob";
 import Example from "./routs/Examples/Example";
 import { Skill } from "./components/Skill";
 import { New } from "./components/New";
+import EditJob from "./routs/EditJob/EditJob";
 
 const App = () => {
   return (
@@ -24,6 +24,7 @@ const App = () => {
           <Route path="/new" element={<NewJob />} />
           <Route path="/example*" element={<Skill />} />
           <Route path="/create" element={<New />} />
+          <Route path="/edit/job/:id" element={<EditJob />} />
         </Routes>
       </ApolloProvider>
     </div>

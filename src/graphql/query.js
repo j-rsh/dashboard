@@ -1,25 +1,6 @@
 import { gql } from "@apollo/client";
 
-// export const GET_USER = gql`
-//   query {
-//     user(id: 1) {
-//       email
-//     }
-//   }
-// `;
 
-// export const SHOWTOKENS_QUERY = gql`
-//   query showTokensQuery {
-//     showtokens {
-//       tokens {
-//         id
-//         createdAt
-//       }
-//       message
-//       status
-//     }
-//   }
-// `;
 
 export const SKILLS_QUERY = gql`
   query skillsQuery($title: String!, $limit: Int) {
@@ -61,47 +42,6 @@ export const SEARCHJOB_QUERY = gql`
   }
 `;
 
-// export const JOBS_QUERY = gql`
-//   query jobsQuery($page: Int!, $pageSize: Int!, $sort: String!) {
-//     jobs(page: $page, pageSize: $pageSize, sort: $sort) {
-//       jobs {
-//         id
-//         title
-//         description
-//         city
-//         updatedAt
-//         skills {
-//           id
-//           title
-//         }
-//       }
-//       totalPage
-//       totalCount
-//       message
-//       status
-//     }
-//   }
-// `;
-
-export const JOB_QUERY = gql`
-  query {
-    job(id: 7) {
-      job {
-        id
-        title
-        description
-        city
-        updatedAt
-        skills {
-          id
-          title
-        }
-      }
-      message
-      status
-    }
-  }
-`;
 export const jobsQuery = gql`
   query Jobs($page: Int!, $pageSize: Int!, $sort: String!) {
     jobs(page: $page, pageSize: $pageSize, sort: $sort) {
@@ -128,6 +68,32 @@ export const SKILLS = gql`
         id
         title
       }
+      message
+      status
+    }
+  }
+`;
+
+export const Job = gql`
+  query job($id: Int!) {
+    job(id: $id) {
+      job {
+        title
+        description
+        city
+        updatedAt
+        skills {
+          id
+          title
+        }
+      }
+    }
+  }
+`;
+
+export const SHOW_TOKENS = gql`
+  query Showtokens {
+    showtokens {
       message
       status
     }

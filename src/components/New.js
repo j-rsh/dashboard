@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, FormikProps, Formik } from "formik";
+import { Form, Formik } from "formik";
 import { Skill } from "./Skill";
 
 export const New = () => (

@@ -1,19 +1,29 @@
 import {Frame, Navigation ,TopBar} from '@shopify/polaris';
-import {HomeMinor,} from '@shopify/polaris-icons';
-import React , {useCallback , useState} from 'react';
+import {HomeMinor} from '@shopify/polaris-icons';
+import React , {useCallback , useState , useEffect} from 'react';
 import {useQuery} from '@apollo/client';
-import {SKILLS_QUERY} from '../../graphql/query';
-// import { SHOWTOKENS_QUERY } from "../graphql/query";
+import { SHOW_TOKENS } from "../../graphql/query";
 import Root from '../Root/Root';
 import Home from '../Home/Home';
-import { Routes, Route} from "react-router-dom";
+import { Routes, Route , useNavigate} from "react-router-dom";
 import Jobs from '../Jobs/Jobs'
 
 export default function Dashboard() {
+  const [userMenuActive, setUserMenuActive] = useState(false);
+  const navigate = useNavigate();
+  const { data, loading } = useQuery(SHOW_TOKENS);
+  const user = localStorage.getItem("user");
 
-  // const { loading, data } = useQuery(SHOWTOKENS_QUERY);
-  // const { data} = useQuery(SKILLS_QUERY);
-  // console.log(data.title)
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!loading && !data.showtokens.status) {
+      navigate("/login");
+    }
+  }, [data, navigate, loading]);
 
 
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
@@ -38,27 +48,26 @@ export default function Dashboard() {
           {
             url: '/jobs',
             label: 'jobs',
-            badge: '15',
           },
         ]}
       />
     </Navigation>
   )
+  const toggleUserMenuActive = useCallback(
+    () => setUserMenuActive((userMenuActive) => !userMenuActive),
+    [],
+  );
   
-
   const userMenuMarkup = (
     <TopBar.UserMenu
       actions={[
         {
-          items: [{content: 'Back to Shopify'}],
-        },
-        {
-          items: [{content: 'Community forums'}],
-        },
+          items: [{content: "Logout", onAction: handleLogout}],
+        }
       ]}
-      // name={data.users.email[0]}
-      detail="Jaded Pixel"
-      initials="D"
+      detail={user}
+      open={userMenuActive}
+      onToggle={toggleUserMenuActive}
     />
   );
   const topBarMarkup = (
