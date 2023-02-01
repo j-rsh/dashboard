@@ -77,20 +77,3 @@ export const UpdateJob = gql`
     }
   }
 `;
-//   mutation CreateJobMutation(
-//     $title: String!
-//     $description: String!
-//     $city: String!
-//   ) {
-//     createJob(title: $title, description: $description, city: $city) {
-//       job {
-//         id
-//         title
-//         description
-//         city
-//       }
-//       message
-//       status
-//     }
-//   }
-// `;

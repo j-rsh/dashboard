@@ -8,7 +8,6 @@ export default function Jobs() {
       <Routes>
         <Route path="/" element={<JobLists />} />
         <Route path="/new" element={<NewJob />} />
-        {/* <Route path="" element={</>} */}
       </Routes>
     </div>
   );

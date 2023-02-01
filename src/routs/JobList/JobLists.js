@@ -2,21 +2,18 @@ import {
   Card,
   ResourceList,
   Avatar,
-  Frame,
   ResourceItem,
   Text,
-  Loading,
   Page,
   Layout,
   Pagination,
   Filters,
-  AppProvider,
-  Modal
+  Modal,
 } from "@shopify/polaris";
 import React, { useState, useCallback, useMemo } from "react";
 import { jobsQuery, SEARCHJOB_QUERY } from "../../graphql/query";
-import { useQuery } from "@apollo/client";
-import {DeleteJob} from "../../graphql/mutation"
+import { useQuery, useMutation } from "@apollo/client";
+import { DeleteJob } from "../../graphql/mutation";
 
 export default function JobLists() {
   const [deleteJob] = useMutation(DeleteJob);
@@ -24,7 +21,6 @@ export default function JobLists() {
   const [pageValue, setPageValue] = useState(1);
   const [sortValue, setSortValue] = useState("DESC");
   const [active, setActive] = useState(null);
-  // console.log(active);
   // jobs Id
   const handleChange = useCallback(() => setActive(!active), [active]);
   const { data, loading } = useQuery(jobsQuery, {
@@ -35,8 +31,6 @@ export default function JobLists() {
       sort: sortValue,
     },
   });
-  // console.log(data);
-
   const { data: searchJob, loading: searchJobLoading } = useQuery(
     SEARCHJOB_QUERY,
     {
@@ -57,8 +51,6 @@ export default function JobLists() {
 
     return data?.jobs?.jobs;
   }, [queryValue, data, searchJob]);
-
-  // console.log(data);
   const onNextHandler = useCallback(() => {
     setPageValue((current) => current + 1);
   }, [setPageValue]);
@@ -97,12 +89,8 @@ export default function JobLists() {
       });
       if (data.data.deleteJob.status) {
         setActive(null);
-        console.log(active);
-        // console.log(data.jobs.deleteJob.status);
       }
-    } catch (error) {
-      // console.log(error);
-    }
+    } catch (error) {}
   }, [active, deleteJob]);
   const modal = (
     <Modal
@@ -124,8 +112,13 @@ export default function JobLists() {
   return (
     <div style={{ height: "250px" }}>
       {" "}
-      <Page title="Jobs"
-       >
+      <Page
+        title="Jobs"
+        primaryAction={{
+          content: "Create Job",
+          url: "/new",
+        }}
+      >
         <Layout>
           <Layout.Section>
             <Card sectioned>
@@ -139,12 +132,11 @@ export default function JobLists() {
                 ]}
                 onSortChange={(selected) => {
                   setSortValue(selected);
-                  // console.log(`Sort option changed to ${selected}.`);
                 }}
                 resourceName={{ singular: "job", plural: "jobs" }}
                 items={jobData || []}
                 renderItem={(item) => {
-                  const { title, description } = item;
+                  const { title, description, city, skills } = item;
                   const shortcutActionHandler = () => {
                     setActive(item.id);
                   };
@@ -162,9 +154,13 @@ export default function JobLists() {
                       url={`/edit/job/${item.id}`}
                     >
                       <Text variant="bodyMd" fontWeight="bold" as="h3">
-                        {description}
+                        {title}
                       </Text>
-                      <p>{title}</p>
+                      <h2>{description}</h2>
+                      <p>{city}</p>
+                      {skills.map((skill, id) => {
+                        return <p key={id}>{skill.title}</p>;
+                      })}
                     </ResourceItem>
                   );
                 }}
@@ -173,19 +169,19 @@ export default function JobLists() {
           </Layout.Section>
         </Layout>
         <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "2em",
-        }}
-      >
-        <Pagination
-          label={pageValue}
-          hasNext={pageValue < totalPage}
-          onNext={onNextHandler}
-          hasPrevious={pageValue > 1}
-          onPrevious={onPreviousHandler}
-        />
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "2em",
+          }}
+        >
+          <Pagination
+            label={pageValue}
+            hasNext={pageValue < totalPage}
+            onNext={onNextHandler}
+            hasPrevious={pageValue > 1}
+            onPrevious={onPreviousHandler}
+          />
         </div>
         {active ? modal : null}
       </Page>

@@ -1,9 +1,15 @@
-import React, { useCallback , useState } from "react";
-import { Page, FormLayout, ContextualSaveBar, Frame , Modal } from "@shopify/polaris";
+import React, { useCallback, useState } from "react";
+import {
+  Page,
+  FormLayout,
+  ContextualSaveBar,
+  Frame,
+  Modal,
+} from "@shopify/polaris";
 import { Form, Formik, Field } from "formik";
 import { Select, TextField } from "@satel/formik-polaris";
 import { Job } from "../../graphql/query";
-import { DeleteJob , UpdateJob } from "../../graphql/mutation";
+import { DeleteJob, UpdateJob } from "../../graphql/mutation";
 import * as Yup from "yup";
 import { useQuery, useMutation } from "@apollo/client";
 import { useParams, useNavigate } from "react-router";
@@ -19,7 +25,6 @@ export default function EditJob() {
   const [updateJob, { error }] = useMutation(UpdateJob);
   const [deleteJob] = useMutation(DeleteJob);
 
-
   const cityOptions = [
     { label: "Tehran", value: "Tehran" },
     { label: "Rasht", value: "Rasht" },
@@ -29,7 +34,7 @@ export default function EditJob() {
   const navigate = useNavigate();
   const handleChange = useCallback(
     () => setdeleteJobId(!deleteJobId),
-    [deleteJobId],
+    [deleteJobId]
   );
 
   const handleSubmit = useCallback(
@@ -51,7 +56,7 @@ export default function EditJob() {
         console.log(error);
       }
     },
-    [updateJob, error],
+    [updateJob, error]
   );
 
   const handleOnAction = useCallback(async () => {
@@ -66,19 +71,12 @@ export default function EditJob() {
       console.log(error);
     }
   }, [deleteJob]);
-  // let skillTitle = [];
-  // data
-  //   ? data.job.job.skills.map((skill) => {
-  //       return skillTitle.push(skill.title);
-  //     })
-  //   : null;
 
   const initialValues = {
     title: data ? data.job.job.title : "",
     description: data ? data.job.job.description : "",
     city: data ? data.job.job.city : "",
-    skills:  [],
-    // skillTitle ? skillTitle :
+    skills: [],
   };
   if (loading) {
     return <div>loading</div>;
@@ -103,14 +101,16 @@ export default function EditJob() {
 
   return (
     <div style={{ marginTop: 100 }}>
-      <Page narrowWidth
-       title="Edit Job"
-      primaryAction={{
-        content: "Delete Job",
-        onAction: () => {
-          setdeleteJobId(true);
-        },
-      }}>
+      <Page
+        narrowWidth
+        title="Edit Job"
+        primaryAction={{
+          content: "Delete Job",
+          onAction: () => {
+            setdeleteJobId(true);
+          },
+        }}
+      >
         <Frame>
           <Formik
             initialValues={initialValues}

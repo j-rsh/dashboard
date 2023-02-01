@@ -28,7 +28,7 @@ export default function Login() {
 
         if (data.login.status) {
           localStorage.setItem("token", data.login.token);
-          localStorage.setItem("user", data.data.login.user.email);
+          localStorage.setItem("user", data.login.user.email);
 
           navigate("/");
         }

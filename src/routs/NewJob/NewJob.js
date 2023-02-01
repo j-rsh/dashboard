@@ -30,7 +30,7 @@ export default function NewJob() {
         });
 
         if (data.createJob.status) {
-          navigate("/");
+          navigate("/jobs");
         }
       } catch (err) {
         console.log(err);
@@ -56,12 +56,10 @@ export default function NewJob() {
                 <ContextualSaveBar
                   discardAction={{
                     onAction: () => {
-                      navigate("/");
+                      navigate("/jobs");
                     },
                   }}
                   saveAction={{
-                    loading: false,
-                    disabled: false,
                     onAction: submitForm,
                   }}
                 />

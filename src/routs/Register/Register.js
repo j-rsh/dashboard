@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router";
 
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { TextField } from "@satel/formik-polaris";
 import { useMutation } from "@apollo/client";
@@ -31,7 +31,6 @@ export default function Register() {
 
         if (data.createUser.status) {
           navigate("/");
-          console.log(data);
         }
 
         setErrorMessage(data.createUser.message);

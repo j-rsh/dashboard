@@ -1,7 +1,5 @@
 import { gql } from "@apollo/client";
 
-
-
 export const SKILLS_QUERY = gql`
   query skillsQuery($title: String!, $limit: Int) {
     skills(title: $title, limit: $limit) {
